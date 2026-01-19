@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Policy Chatbot - AI Sustainability Assistant</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <div class="header-content">
+                <div class="logo">
+                    <span class="logo-icon">🌱</span>
+                    <h1>Green Policy Chatbot</h1>
+                </div>
+                <p class="subtitle">AI-Powered Sustainability & Government Policy Assistant</p>
+            </div>
+        </header>
+
+        <div class="chat-container">
+            <div class="chat-messages" id="chatMessages">
+                <div class="message bot-message">
+                    <div class="message-avatar bot-avatar">🤖</div>
+                    <div class="message-content">
+                        <p>Hello! I'm your Green Policy Assistant. I can help answer questions about sustainability policies, green schemes, and environmental regulations based on official government documents.</p>
+                        <p class="message-hint">Try asking me about renewable energy policies, carbon reduction schemes, or sustainability initiatives!</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="input-container">
+                <form id="chatForm" class="chat-form">
+                    <input 
+                        type="text" 
+                        id="userInput" 
+                        class="chat-input" 
+                        placeholder="Ask about sustainability policies, green schemes, regulations..."
+                        autocomplete="off"
+                        required
+                    />
+                    <button type="submit" class="send-button" id="sendButton">
+                        <span class="send-icon">➤</span>
+                    </button>
+                </form>
+                <div class="input-footer">
+                    <small>Responses are based on official policy documents only</small>
+                </div>
+            </div>
+        </div>
+
+        <div class="info-panel">
+            <div class="info-card">
+                <h3>📚 Document Coverage</h3>
+                <ul>
+                    <li>Sustainability policies</li>
+                    <li>Green energy schemes</li>
+                    <li>Carbon reduction programs</li>
+                    <li>Environmental regulations</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
