@@ -1,3 +1,12 @@
+---
+title: Green Policy Chatbot
+emoji: 🌱
+colorFrom: green
+colorTo: blue
+sdk: docker
+pinned: false
+---
+
 # 🌱 Green Policy Chatbot - AI Sustainability Assistant
 
 A simple AI chatbot that uses **Retrieval-Augmented Generation (RAG)** to answer questions about sustainability policies and green schemes based on official government documents.
