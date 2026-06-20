@@ -1,8 +1,21 @@
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
+from fastapi.responses import FileResponse
 from pydantic import BaseModel
 from typing import List, Optional
 import uvicorn
+import os
+
+app = FastAPI(title="Green Policy Chatbot API")
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Initialize RAG Engine with error handling
 rag_engine = None
@@ -15,7 +28,6 @@ try:
 except Exception as e:
     print(f"⚠️ RAG Engine initialization failed: {e}")
     print("Creating fallback response system...")
-    # Create a simple fallback class
     class FallbackRAGEngine:
         def get_answer(self, question):
             return (
@@ -28,7 +40,7 @@ except Exception as e:
             )
         def get_document_list(self):
             return ["System temporarily unavailable"]
-    
+
     rag_engine = FallbackRAGEngine()
     print("✅ Fallback system ready!")
 
@@ -45,47 +57,46 @@ async def health_check():
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    """
-    Process a user question and return an answer based on sustainability documents.
-    """
     if not rag_engine:
         return ChatResponse(
             answer="I'm sorry, but the document analysis system is currently unavailable. Please try again later or contact support.",
             sources=[]
         )
-    
+
     if not request.question.strip():
         raise HTTPException(status_code=400, detail="Question cannot be empty")
-    
+
     try:
-        # Get answer from RAG engine
         answer, sources = rag_engine.get_answer(request.question)
-        
-        return ChatResponse(
-            answer=answer,
-            sources=sources
-        )
+        return ChatResponse(answer=answer, sources=sources)
     except Exception as e:
         print(f"Error processing question: {e}")
         raise HTTPException(status_code=500, detail=f"Error processing question: {str(e)}")
 
 @app.get("/documents")
 async def list_documents():
-    """
-    List all loaded documents in the knowledge base.
-    """
     if not rag_engine:
         return {
             "documents": [],
             "count": 0,
             "message": "Document analysis system is currently unavailable"
         }
-    
-    return {
-        "documents": rag_engine.get_document_list(),
-        "count": len(rag_engine.get_document_list())
-    }
+
+    docs = rag_engine.get_document_list()
+    return {"documents": docs, "count": len(docs)}
+
+# Serve static frontend files
+@app.get("/")
+async def serve_index():
+    return FileResponse("index.html")
+
+@app.get("/style.css")
+async def serve_css():
+    return FileResponse("style.css")
+
+@app.get("/script.js")
+async def serve_js():
+    return FileResponse("script.js")
 
 if __name__ == "__main__":
-    uvicorn.run(app, host="0.0.0.0", port=8000)
-
+    uvicorn.run(app, host="0.0.0.0", port=5000)
